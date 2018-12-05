@@ -1,25 +1,25 @@
-module scoreManager(clk, resetn, enable, increase_score, score);
+module scoreManager(clk, resetn, enable, increase_score, score_out);
 	input			clk, resetn, enable, increase_score;
-	output	reg	[15:0]	score;
+	output	reg	[15:0]	score_out;
 	
-	always@(*)
+	always@(posedge clk)
+	begin
 		if(!resetn || !enable) 
-			score <= 16'd0;
+			score_out <= 16'd0;
 		else if(increase_score)
-			score <= score + 1'd1;
-		end
+			score_out <= score_out + 1'd1;
 	end
 
 endmodule
 
-module displayScore(score, hex_disp_0, hex_disp_1, hex_disp_2, hex_disp_3);
-	input	[15:0]	score;
+module displayScore(score_in, hex_disp_0, hex_disp_1, hex_disp_2, hex_disp_3);
+	input	[15:0]	score_in;
 	output	[6:0]	hex_disp_0, hex_disp_1, hex_disp_2, hex_disp_3;
 	
-	sevenSegment ss0(score[3:0]  , hex_disp_0)
-	sevenSegment ss1(score[7:4]  , hex_disp_1)
-	sevenSegment ss2(score[11:8] , hex_disp_2)
-	sevenSegment ss3(score[15:12], hex_disp_3)
+	sevenSegment ss0(score_in[3:0]  , hex_disp_0);
+	sevenSegment ss1(score_in[7:4]  , hex_disp_1);
+	sevenSegment ss2(score_in[11:8] , hex_disp_2);
+	sevenSegment ss3(score_in[15:12], hex_disp_3);
 endmodule
 
 module sevenSegment(num, segment);
